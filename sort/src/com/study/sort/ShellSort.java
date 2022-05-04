@@ -1,6 +1,8 @@
 package com.study.sort;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @author RenAshbell
@@ -8,9 +10,28 @@ import java.util.Arrays;
  */
 public class ShellSort {
     public static void main(String[] args) {
-        int[] arr = {8,9,1,7,2,3,5,4,6,0};
-        shellSort(arr);
-        System.out.println(Arrays.toString(arr));
+//        int[] arr = {8,9,1,7,2,3,5,4,6,0};
+//        shellSort(arr);
+//        System.out.println(Arrays.toString(arr));
+
+        int[] arr = new int[80000];
+        for (int i = 0; i < 80000;i++){
+            arr[i] = (int) (Math.random() * 8000000);// 生成一个[0,8000000)数
+        }
+
+        Date date1 = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date1Str = simpleDateFormat.format(date1);
+        System.out.println("排序前的时间是=" + date1Str);
+
+        // 测试希尔排序
+        shellSort2(arr);
+
+        Date date2 = new Date();
+        String date2Str = simpleDateFormat.format(date2);
+        System.out.println("排序前的时间是=" + date2Str);
+
+
     }
 
     public static void shellSort(int[] arr){
@@ -72,5 +93,27 @@ public class ShellSort {
                 }
             }
          */
+    }
+
+    // 对交换式的希尔排序进行优化 -> 移位法
+    public static void shellSort2(int[] arr){
+        for (int i = arr.length / 2; i > 0; i /= 2) {
+            // 从第 i 个元素开始, 逐个对其所在的组进行直接插入排序
+            for (int j = i; j < arr.length; j++) {
+                int insertIndex = j;
+                int insertValue = arr[insertIndex];
+                // 跟上一步比较
+                if (arr[insertIndex] < arr[insertIndex - i]){
+                    // 如果比上一步小的话就进行插入排序
+                    while (insertIndex - i >0 && insertValue < arr[insertIndex - i]){
+                        // 移动
+                        arr[insertIndex] = arr[insertIndex - i];
+                        insertIndex -= i;
+                    }
+                    // 当退出while后, 就给temp找到插入的位置
+                    arr[insertIndex] = insertValue;
+                }
+            }
+        }
     }
 }
